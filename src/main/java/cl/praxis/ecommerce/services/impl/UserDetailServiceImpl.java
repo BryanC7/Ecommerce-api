@@ -78,17 +78,22 @@ public class UserDetailServiceImpl implements UserDetailsService, IBaseCrud<User
     }
 
     public Authentication authenticate(String email, String password) {
-        UserDetails userDetails = this.loadUserByUsername(email);
+        try {
+            UserDetails userDetails = this.loadUserByUsername(email);
 
-        if(userDetails == null) {
-            throw new BadCredentialsException("Invalid username or password");
+            if (userDetails == null) {
+                throw new BadCredentialsException("Correo electrónico incorrecto");
+            }
+
+            if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+                throw new BadCredentialsException("Contraseña incorrecta");
+            }
+
+            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        } catch (BadCredentialsException exception) {
+            System.out.println("Exception caught: " + exception.getMessage());
+            throw exception;
         }
-
-        if(!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Invalid password");
-        }
-
-        return new UsernamePasswordAuthenticationToken(email, userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     public AuthResponse createUser(AuthCreateUserRequest authCreateUserRequest) {
@@ -98,13 +103,10 @@ public class UserDetailServiceImpl implements UserDetailsService, IBaseCrud<User
         String password = authCreateUserRequest.password();
         int phone = authCreateUserRequest.phone();
         LocalDate registerDate = authCreateUserRequest.registerDate();
-        List<String> roleRequest = authCreateUserRequest.roleRequest().roleListName();
+        List<String> roleRequest = new ArrayList<>();
+        roleRequest.add("USER");
 
         Set<RoleEntity> roleEntitySet = new HashSet<>(roleRepository.findRoleEntitiesByRoleEnumIn(roleRequest));
-
-        if(roleEntitySet.isEmpty()) {
-            throw new IllegalArgumentException("The roles specified doesn't exist");
-        }
 
         UserEntity userEntity = UserEntity.builder()
                 .name(name)

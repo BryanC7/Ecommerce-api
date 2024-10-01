@@ -37,10 +37,6 @@ public class Ecommerce {
                     .name("DELETE")
                     .build();
 
-            PermissionEntity refactorPermission = PermissionEntity.builder()
-                    .name("REFACTOR")
-                    .build();
-
             /* Roles */
             RoleEntity roleAdmin = RoleEntity.builder()
                     .roleEnum(RoleEnum.ADMIN)
@@ -55,11 +51,6 @@ public class Ecommerce {
             RoleEntity roleInvited = RoleEntity.builder()
                     .roleEnum(RoleEnum.INVITED)
                     .permissionList(Set.of(readPermission))
-                    .build();
-
-            RoleEntity roleDeveloper = RoleEntity.builder()
-                    .roleEnum(RoleEnum.DEVELOPER)
-                    .permissionList(Set.of(createPermission, readPermission, updatePermission, deletePermission, refactorPermission))
                     .build();
 
 
@@ -106,21 +97,8 @@ public class Ecommerce {
                     .roles(Set.of(roleInvited))
                     .build();
 
-            UserEntity user4 = UserEntity.builder()
-                    .name("José")
-                    .lastName("Ortega")
-                    .email("jose@correo.com")
-                    .password("$2a$10$iulxRLZAcfA/fcc/0vP9H.4XqQ.gohJUt1DE5NRvUehCTOH6lGnmS")
-                    .phone(87654321)
-                    .registerDate(LocalDate.of(2024, 9,15))
-                    .isEnabled(true)
-                    .accountNoExpired(true)
-                    .accountNoLocked(true)
-                    .credentialNoExpired(true)
-                    .roles(Set.of(roleDeveloper))
-                    .build();
 
-            userRepository.saveAll((List.of(user1, user2, user3, user4)));
+            userRepository.saveAll((List.of(user1, user2, user3)));
 
             /* Address */
             Address address = Address.builder()

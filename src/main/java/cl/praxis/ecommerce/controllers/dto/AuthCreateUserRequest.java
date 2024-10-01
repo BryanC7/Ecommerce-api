@@ -1,6 +1,5 @@
 package cl.praxis.ecommerce.controllers.dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,6 +10,5 @@ public record AuthCreateUserRequest(@NotBlank String name,
                                     @NotBlank String email,
                                     @NotBlank String password,
                                     @NotNull int phone,
-                                    @NotNull LocalDate registerDate,
-                                    @Valid AuthCreateRoleRequest roleRequest) {
+                                    @NotNull LocalDate registerDate) {
 }
