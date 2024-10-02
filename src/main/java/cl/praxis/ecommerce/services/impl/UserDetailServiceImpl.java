@@ -3,6 +3,7 @@ package cl.praxis.ecommerce.services.impl;
 import cl.praxis.ecommerce.controllers.dto.AuthCreateUserRequest;
 import cl.praxis.ecommerce.controllers.dto.AuthLoginRequest;
 import cl.praxis.ecommerce.controllers.dto.AuthResponse;
+import cl.praxis.ecommerce.controllers.exceptions.UserNotFoundException;
 import cl.praxis.ecommerce.entities.RoleEntity;
 import cl.praxis.ecommerce.entities.UserEntity;
 import cl.praxis.ecommerce.repositories.RoleRepository;
@@ -45,7 +46,7 @@ public class UserDetailServiceImpl implements UserDetailsService, IBaseCrud<User
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findUserEntitiesByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("El usuario con el correo " + email + " no existe."));
+                .orElseThrow(() -> new UserNotFoundException("El usuario con el correo " + email + " no existe."));
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 
@@ -81,15 +82,11 @@ public class UserDetailServiceImpl implements UserDetailsService, IBaseCrud<User
         try {
             UserDetails userDetails = this.loadUserByUsername(email);
 
-            if (userDetails == null) {
-                throw new BadCredentialsException("Correo electrónico incorrecto");
-            }
-
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
                 throw new BadCredentialsException("Contraseña incorrecta");
             }
 
-            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(email, userDetails.getPassword(), userDetails.getAuthorities());
         } catch (BadCredentialsException exception) {
             System.out.println("Exception caught: " + exception.getMessage());
             throw exception;
