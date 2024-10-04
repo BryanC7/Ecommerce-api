@@ -47,10 +47,11 @@ public class SecurityConfig {
                     http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
 
                     // Endpoints privados
-                    http.requestMatchers(HttpMethod.GET, "/method/get").hasAuthority("READ");
-                    http.requestMatchers(HttpMethod.POST, "/method/post").hasAuthority("CREATE");
-                    http.requestMatchers(HttpMethod.DELETE, "/method/delete").hasAuthority("DELETE");
-                    http.requestMatchers(HttpMethod.PUT, "/method/put").hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.GET, "/api/users/{id}").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.POST, "/api/users/new").hasAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAuthority("DELETE");
+                    http.requestMatchers(HttpMethod.PUT, "/api/users/update/{id}").hasAuthority("UPDATE");
 
                     // Endpoints no especificados
                     http.anyRequest().denyAll();
