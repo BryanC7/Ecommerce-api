@@ -1,4 +1,5 @@
 package cl.praxis.ecommerce.entities;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class Product {
     @Column(name = "nombre_producto", nullable = false, length = 100)
     private String productName;
 
-    @Column(name = "descripcion", nullable = false, length = 200)
+    @Column(name = "descripcion", nullable = false, length = 1000)
     private String description;
 
     @Column(name = "precio", nullable = false)
@@ -30,5 +31,6 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "id_categoria")
+    @JsonBackReference
     private Category category;
 }

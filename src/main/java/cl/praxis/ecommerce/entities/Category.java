@@ -1,5 +1,6 @@
 package cl.praxis.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +24,6 @@ public class Category {
     private String categoryName;
 
     @OneToMany(mappedBy = "category")
+    @JsonManagedReference
     private List<Product> productList;
 }
